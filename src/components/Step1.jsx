@@ -1,14 +1,23 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function Step1({ update, handleNext, data }) {
+  const schema = z.object({
+    name: z.string().min(3),
+    email: z.string().email(),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
-  const onSubmit = (data, errors) => {
+  const onSubmit = (data) => {
     update(data);
     handleNext();
   };
@@ -24,24 +33,24 @@ function Step1({ update, handleNext, data }) {
         action=""
       >
         <input
-          {...register("name", { required: true, minLength: 3 })}
+          {...register("name")}
           defaultValue={data.name}
           className="px-2 block w-3/4 mt-3 py-2 border border-zinc-800 outline-none rounded"
           type="text"
           placeholder="Full Name"
         />
-        {errors.name?.type === "required" && (
-          <span className="text-red-500 text-xs">This field is required</span>
+        {errors.name && (
+          <span className="text-red-500 text-xs">{errors.name.message}</span>
         )}
         <input
-          {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
+          {...register("email")}
           defaultValue={data.email}
           className="px-2 block w-3/4 mt-3 py-2 border border-zinc-800 outline-none rounded"
           type="text"
           placeholder="Email Address"
         />
-        {errors.email?.type === "required" && (
-          <span className="text-red-500 text-xs">This field is required</span>
+        {errors.email && (
+          <span className="text-red-500 text-xs">{errors.email.message}</span>
         )}
         <br />
         <input
