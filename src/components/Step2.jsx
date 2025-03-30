@@ -1,8 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-function Step2({ update, handleNext, handlePrev }) {
-  const { register, handleSubmit } = useForm();
+function Step2({ data, update, handleNext, handlePrev }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = (data) => {
     update(data);
@@ -15,17 +19,33 @@ function Step2({ update, handleNext, handlePrev }) {
       <hr className="mt-5" />
       <form onSubmit={handleSubmit(onSubmit)} className="mt-5" action="">
         <input
-          {...register("city")}
+          {...register("city", {
+            required: "City is required",
+          })}
+          defaultValue={data.city}
           className="px-2 block w-3/4 mt-3 py-2 border border-zinc-800 outline-none rounded"
           type="text"
           placeholder="City"
         />
+        {errors.city && (
+          <span className="text-red-500 text-xs">{errors.city.message}</span>
+        )}
         <input
-          {...register("zipCode")}
+          {...register("zipCode", {
+            required: "Zip Code is required",
+            pattern: {
+              value: /^[0-9]{5}$/,
+              message: "Zip Code must be 5 digits",
+            },
+          })}
+          defaultValue={data.zipCode}
           className="px-2 block w-3/4 mt-3 py-2 border border-zinc-800 outline-none rounded"
           type="text"
           placeholder="Zip Code"
         />
+        {errors.zipCode && (
+          <span className="text-red-500 text-xs">{errors.zipCode.message}</span>
+        )}
         <div className="flex gap-2">
           <input
             type="button"
