@@ -1,12 +1,21 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 function Step2({ data, update, handleNext, handlePrev }) {
+  const schema = z.object({
+    city: z.string().min(1, "City is required"),
+    zipCode: z.string().regex(/^[0-9]{5}$/, "Zip Code must be 5 digits"),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit = (data) => {
     update(data);
