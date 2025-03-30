@@ -21,6 +21,15 @@ function App() {
 
   return (
     <div className="w-full h-screen text-zinc-400 p-20 bg-zinc-900">
+      <div className="mb-10">
+        <div className="flex w-full gap-5 h-1 bg-transparent">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div
+              className={`w-1/3 h-full ${i <= step - 1 ? "bg-green-600" : "bg-zinc-800"}`}
+            ></div>
+          ))}
+        </div>
+      </div>
       {step === 1 && (
         <Step1
           data={elem}
